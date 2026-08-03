@@ -1,0 +1,12 @@
+/* Synthetic Figma MCP get_design_context fragment for scripts/self-test.mjs.
+   Mimics Tailwind-style codegen output. Not a real brand — values are chosen
+   so every extraction bucket (hex, rgba, radius, blur, fontSize, tracking,
+   gap) is non-empty. */
+export function SampleCard() {
+  return (
+    <div className="bg-[#181f23] text-[#ff0000] border-[#7e7e7e] rounded-[30px] backdrop-blur-[12px] gap-[16px]">
+      <span className="text-[#c8e2ff] text-[10px] tracking-[0.08em]" />
+      <p className="text-[12px]" style={{ color: "rgba(255, 255, 255, 0.64)" }} />
+    </div>
+  );
+}
