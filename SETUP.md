@@ -26,11 +26,16 @@ MCP is the bridge between the agent and Figma. Two ways — pick one:
 
 - **Figma desktop app (easiest for designers).** Open your file in the Figma
   desktop app, then **Figma menu → Preferences → Enable Dev Mode MCP Server**.
-  The agent reads the file you have open — no keys or URLs to copy. Requires a
-  Figma plan/seat that includes MCP access (check Figma's current plan docs).
+  The agent reads the file you have open — no keys or URLs to copy. **Usually
+  needs a paid Figma plan/seat with Dev Mode MCP** (check Figma's current plan
+  docs — free plans often cannot enable this).
 - **Remote MCP server.** Your agent connects to Figma's hosted MCP endpoint
   (OAuth sign-in); you pass a file link with each request. Configured in your
-  agent's MCP/tools settings.
+  agent's MCP/tools settings. Same plan limits typically apply.
+
+If MCP is unavailable on your plan, you can still run
+`node <skill-dir>/scripts/self-test.mjs` and use saved design-context dumps with
+the offline helpers — but live inventory against Figma will not work.
 
 Figma's Help Center article **"Dev Mode MCP Server"** (help.figma.com) has the
 exact config snippet to paste into each agent.

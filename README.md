@@ -67,6 +67,11 @@ npx skills update figma-design-system-handoff
 New to agents or Figma MCP? [SETUP.md](./SETUP.md) is the designer-facing
 one-time setup (agent, Figma MCP, Node) — no dev background assumed.
 
+**Plan limit:** live Figma MCP usually needs a paid Dev Mode seat. Without it,
+inventory against a live file will not work — offline helpers
+([`scripts/self-test.mjs`](./scripts/self-test.mjs) and saved design-context
+dumps) still run.
+
 Or copy these files into your agent skills directory (keep relative links intact):
 
 - `SKILL.md`

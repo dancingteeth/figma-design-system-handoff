@@ -17,6 +17,8 @@ Feedback + designer readiness polish:
   prerequisites / Step 0 / [`BOOTSTRAP.md`](./BOOTSTRAP.md).
 - `scripts/self-test.mjs` asserts SKILL↔CHANGELOG version sync and that the
   font-drop rule remains present in ASSETS.md.
+- Note that live Figma MCP usually needs a paid Dev Mode seat; offline helpers
+  still run without it.
 
 ## 1.0.0 — 2026-08-03
 
