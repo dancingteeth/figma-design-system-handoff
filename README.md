@@ -127,10 +127,6 @@ For responsive work, supply all required Figma target frames or variable modes
 in the adapter. A single static frame cannot prove mobile behavior,
 interaction states, accessibility, or production parity.
 
-A live Community / worked-example token package is intentionally deferred until
-a Figma plan with MCP access is available. Offline helpers
-(`scripts/self-test.mjs`) still validate without MCP.
-
 Adjacent but out of scope: applying finished tokens to **pre-existing HTML
 exports** (branded standalone pages, audits, marketing exports) is a companion
 workflow that pairs with this skill but is not part of it.
