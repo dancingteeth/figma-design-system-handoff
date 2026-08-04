@@ -46,22 +46,26 @@ If a block still looks huge, split one level into its children — never paste t
 ## Prompt 1b — Four-tool pass per block
 
 ```text
-For EACH block from Prompt 1a, run in parallel (omit fileKey on desktop MCP):
+For EACH block from Prompt 1a, run your Figma MCP's tools for these four roles
+in parallel (omit fileKey on desktop MCP that uses the open file). Tool names
+vary by server — map from your MCP's actual tool list:
 
-  get_metadata(fileKey="<FILE_KEY>", nodeId="<BLOCK_NODE_ID>")
-  get_design_context(fileKey="<FILE_KEY>", nodeId="<BLOCK_NODE_ID>",
-                     clientLanguages="<CLIENT_LANGUAGES>", clientFrameworks="<CLIENT_FRAMEWORKS>")
-  get_variable_defs(fileKey="<FILE_KEY>", nodeId="<BLOCK_NODE_ID>",
-                     clientLanguages="<CLIENT_LANGUAGES>", clientFrameworks="<CLIENT_FRAMEWORKS>")
-  get_screenshot(fileKey="<FILE_KEY>", nodeId="<BLOCK_NODE_ID>")
+  structure / metadata     → e.g. get_metadata(fileKey="<FILE_KEY>", nodeId="<BLOCK_NODE_ID>")
+  design context           → e.g. get_design_context(fileKey="<FILE_KEY>", nodeId="<BLOCK_NODE_ID>",
+                             clientLanguages="<CLIENT_LANGUAGES>", clientFrameworks="<CLIENT_FRAMEWORKS>")
+  variables                → e.g. get_variable_defs(fileKey="<FILE_KEY>", nodeId="<BLOCK_NODE_ID>",
+                             clientLanguages="<CLIENT_LANGUAGES>", clientFrameworks="<CLIENT_FRAMEWORKS>")
+  screenshot               → e.g. get_screenshot(fileKey="<FILE_KEY>", nodeId="<BLOCK_NODE_ID>")
 
 Adjust clientLanguages / clientFrameworks to match the consumer stack.
 
 Truncation guard:
-- If get_design_context exceeds ~600 lines or is truncated, ABORT and re-run on children.
+- If design-context output exceeds ~600 lines or is truncated, ABORT and re-run on children.
 - Do not paste raw codegen into the user reply — keep dumps for Prompt 1c.
 
-get_variable_defs is authoritative for bound variables even when design_context shows literals.
+Variable tools (when present) are authoritative for bound variables even when
+design context shows literals. If variables or modes cannot be read, mark them
+unverified — do not invent values.
 
 Save payloads keyed by node id for 1c / 1d / Step 2.
 ```

@@ -2,6 +2,24 @@
 
 Versions match `metadata.version` in [`SKILL.md`](./SKILL.md).
 
+## 1.0.1 — 2026-08-04
+
+Feedback + designer readiness polish:
+
+- Shorten the skill description for better trigger matching.
+- Document that Figma MCP tool names vary by server; map to structure /
+  design-context / variables / screenshot roles.
+- Drop the undefined Plugin API (`use_figma`) promise — mark unread variable
+  modes as **unverified** instead.
+- Promote the licensed-font hard rule in [`ASSETS.md`](./ASSETS.md).
+- Add designer guidance for **Auto Layout + Components** in
+  [`SETUP.md`](./SETUP.md#prepare-the-figma-file), with agent checks in
+  prerequisites / Step 0 / [`BOOTSTRAP.md`](./BOOTSTRAP.md).
+- `scripts/self-test.mjs` asserts SKILL↔CHANGELOG version sync and that the
+  font-drop rule remains present in ASSETS.md.
+- Note that live Figma MCP usually needs a paid Dev Mode seat; offline helpers
+  still run without it.
+
 ## 1.0.0 — 2026-08-03
 
 Initial public release of the brand-agnostic Figma MCP → design-system

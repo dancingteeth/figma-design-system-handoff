@@ -2,7 +2,22 @@
 
 Pairs with [SKILL.md](./SKILL.md) Step 5 and Prompt 5 in [PROMPT_PACK.md](./PROMPT_PACK.md). Paths come from [ADAPTER.md](./ADAPTER.md) (`publicAssetDir`, `packageAssetDir`, `assetRegistryPath`).
 
-Licensed font binaries are **out of scope** unless the project already documents a font drop — do not scrape fonts from Figma exports into public packages. Separate the **typography metrics board** (font family/size/line-height for measurement) from the **web-asset source node** (`figmaAssetSourceNode` in [ADAPTER.md](./ADAPTER.md)) that exports SVG/PNG/rasters; licensed `.otf`/`.ttf` come from the project font drop in `public/fonts`, never from a Figma export.
+## Fonts are not Figma export assets
+
+**Hard rule — licensed font binaries (`.otf` / `.ttf` / `.woff2`) are out of
+scope for the Figma export pipeline.** Do not scrape fonts from Figma into
+public packages or the design-package `assets/` tree.
+
+- Capture typography **metrics** (family name, size, weight, line-height) from
+  the design / measurements checklist.
+- Ship font **binaries** only from the project's documented font drop
+  (typically `public/fonts/`) with proper licensing.
+- The adapter field `figmaAssetSourceNode` is for **web-shipped binaries**
+  (SVG / PNG / raster) — it **excludes** licensed fonts.
+
+Separate the **typography metrics board** from the **web-asset source node**.
+Mixing them is how teams accidentally commit Commercial Type / Adobe / other
+licensed faces into git.
 
 ---
 
@@ -12,6 +27,7 @@ Licensed font binaries are **out of scope** unless the project already documents
 2. **Traceability** — prefer storing `figmaNodeId` next to each binary in a registry.
 3. **Deterministic names** — kebab-case + role; sync scripts and case-sensitive deploys stay happy.
 4. **Correct SVG coloring** — `<img>` SVGs cannot see page CSS variables.
+5. **No font scraping** — see [Fonts are not Figma export assets](#fonts-are-not-figma-export-assets).
 
 ---
 
@@ -120,3 +136,4 @@ SVGs via `<img src>` are sandboxed:
 - Spaces / underscores / mixed case filenames
 - Forgetting registry / `figmaNodeId`
 - Stretching icons with `preserveAspectRatio="none"`
+- Scraping licensed `.otf` / `.ttf` / `.woff2` from Figma into `public/` or the design package

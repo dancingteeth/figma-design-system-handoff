@@ -16,6 +16,11 @@ Required:
 - intended frontend stack
 - owner who can approve token and component decisions
 
+Strongly preferred Figma structure (see [SETUP.md](./SETUP.md#prepare-the-figma-file)):
+
+- Auto Layout on major sections
+- Components / variants for repeated interactive controls
+
 Useful but optional:
 
 - v0 or other prototype output

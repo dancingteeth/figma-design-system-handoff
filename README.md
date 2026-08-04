@@ -118,9 +118,18 @@ Choose it only when canonical token and component paths already exist.
 Neither mode treats generated v0 code as the architecture. See
 [`BOOTSTRAP.md`](./BOOTSTRAP.md) for the complete creation sequence.
 
+For best extraction quality, prefer Figma frames with **Auto Layout** on major
+sections and **Components/variants** for repeated controls — designer checklist
+in [`SETUP.md`](./SETUP.md#prepare-the-figma-file). Freeform artboards still
+work; layout semantics will be weaker.
+
 For responsive work, supply all required Figma target frames or variable modes
 in the adapter. A single static frame cannot prove mobile behavior,
 interaction states, accessibility, or production parity.
+
+A live Community / worked-example token package is intentionally deferred until
+a Figma plan with MCP access is available. Offline helpers
+(`scripts/self-test.mjs`) still validate without MCP.
 
 Adjacent but out of scope: applying finished tokens to **pre-existing HTML
 exports** (branded standalone pages, audits, marketing exports) is a companion

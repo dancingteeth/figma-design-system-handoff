@@ -7,9 +7,11 @@
  *   node scripts/self-test.mjs
  *
  * Covers:
- *   1. extract-primitives.mjs   — fixture parses into every bucket
- *   2. compare-figma-to-tokens.mjs — fixture diffs against a synthetic token map
- *   3. verify-package-exports.mjs  — synthetic package surface resolves
+ *   0. SKILL.md metadata.version matches latest CHANGELOG heading
+ *   1. ASSETS.md still states the licensed-font hard rule
+ *   2. extract-primitives.mjs   — fixture parses into every bucket
+ *   3. compare-figma-to-tokens.mjs — fixture diffs against a synthetic token map
+ *   4. verify-package-exports.mjs  — synthetic package surface resolves
  *
  * consumer-smoke.mjs is intentionally not run here (it packs and installs a
  * real package — run it against your design package via the adapter's
@@ -22,6 +24,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const scriptsDir = path.dirname(fileURLToPath(import.meta.url));
+const repoRoot = path.resolve(scriptsDir, "..");
 const fixture = path.join(scriptsDir, "fixtures", "sample-figma-dump.txt");
 
 let failures = 0;
@@ -35,7 +38,29 @@ function run(script, args = []) {
   });
 }
 
-// 1. extract-primitives on the fixture -------------------------------------
+// 0. version sync: SKILL.md metadata.version ↔ latest CHANGELOG ## heading -----
+const skillMd = fs.readFileSync(path.join(repoRoot, "SKILL.md"), "utf8");
+const changelogMd = fs.readFileSync(path.join(repoRoot, "CHANGELOG.md"), "utf8");
+const skillVersion = skillMd.match(/^\s*version:\s*"([^"]+)"/m)?.[1] ?? null;
+const changelogVersion = changelogMd.match(/^##\s+(\d+\.\d+\.\d+)\b/m)?.[1] ?? null;
+check(
+  "version sync: SKILL.md ↔ CHANGELOG",
+  Boolean(skillVersion) && skillVersion === changelogVersion,
+  `skill=${skillVersion ?? "?"} changelog=${changelogVersion ?? "?"}`,
+);
+
+// 1. ASSETS.md font-drop hard rule still present --------------------------------
+const assetsMd = fs.readFileSync(path.join(repoRoot, "ASSETS.md"), "utf8");
+check(
+  "ASSETS.md: licensed font hard rule",
+  /licensed font binaries/i.test(assetsMd) &&
+    /out of\s*\n?\s*scope|out of scope/i.test(assetsMd) &&
+    /never from a Figma export|Do not scrape fonts from Figma|excludes.*licensed fonts/i.test(
+      assetsMd,
+    ),
+);
+
+// 2. extract-primitives on the fixture -------------------------------------
 const extracted = JSON.parse(run("extract-primitives.mjs", [fixture]));
 check(
   "extract-primitives: hex",
@@ -51,7 +76,7 @@ check("extract-primitives: fontSize", extracted.fontSize.includes("text-[10px]")
 check("extract-primitives: tracking", extracted.tracking.includes("tracking-[0.08em]"));
 check("extract-primitives: gap", extracted.gap.includes("gap-[16px]"));
 
-// 2. compare-figma-to-tokens: fixture vs a synthetic token map -------------
+// 3. compare-figma-to-tokens: fixture vs a synthetic token map -------------
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "fdsh-selftest-"));
 try {
   const tokenJson = path.join(tmp, "design-tokens.json");
@@ -72,7 +97,7 @@ try {
   );
   check("compare: onlyInRepo", report.onlyInRepo.includes("#00AAFF"));
 
-  // 3. verify-package-exports on a synthetic package -------------------------
+  // 4. verify-package-exports on a synthetic package -------------------------
   const pkgDir = path.join(tmp, "pkg");
   fs.mkdirSync(path.join(pkgDir, "src"), { recursive: true });
   fs.writeFileSync(path.join(pkgDir, "src", "index.js"), "export {};\n");

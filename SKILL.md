@@ -1,18 +1,14 @@
 ---
 name: figma-design-system-handoff
 description: >-
-  Extract any Figma web/app frame via Figma MCP and create or update maintainable
-  UI and its design system (tokens, primitives, page chrome) — not as raw
-  codegen paste. Covers chunked MCP discovery, exact measurements, token
-  reconcile, shadcn/v0 bridge, state vocabulary, asset localization, and
-  release readiness. Use when the user pastes
-  a Figma URL/node, asks for Figma→tokens/handoff, pixel parity, design-token
-  diff, or design-system-aligned implementation with Figma MCP. Brand-agnostic;
-  resolve paths via ADAPTER.md. Do not use as an always-on rule.
+  Create or update a design system from a Figma web/app frame via Figma MCP —
+  chunked discovery, measurements, tokens, primitives, and a reference screen
+  instead of raw codegen. Use for Figma→tokens handoff, pixel parity,
+  design-token diff, or bootstrap when no design system exists.
 license: MIT
 metadata:
   author: dancingteeth
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Figma → Design-System Handoff
@@ -50,10 +46,28 @@ the architecture or token source of truth.
 - A Figma URL or `fileKey` + `nodeId` (from `?node-id=A-B` → `A:B`).
 - A design system to reconcile against — or willingness to bootstrap one via the adapter.
 - Node.js (current LTS) for the optional `scripts/*.mjs` helpers.
+- Prefer Figma frames built with **Auto Layout** and **Components/variants** —
+  freeform absolute artboards still work, but spacing/sizing semantics are weaker
+  and more values stay page-chrome one-offs. Designer checklist:
+  [SETUP.md](./SETUP.md#prepare-the-figma-file).
 
 First time setting up an agent + Figma MCP, or the requester is a designer
 without a dev environment? [SETUP.md](./SETUP.md) is the no-code-assumed
 walkthrough — hand it over before starting Step 0.
+
+**Figma MCP tool names vary by server.** Before Step 1, list the tools your MCP
+exposes and map them to these roles (examples in parentheses are common, not
+universal):
+
+| Role | Purpose | Common names |
+| --- | --- | --- |
+| Structure | Cheap node tree / metadata | `get_metadata` |
+| Design context | Layout + tokens + reference codegen | `get_design_context` |
+| Variables | Bound Figma variable defs | `get_variable_defs` |
+| Screenshot | Visual ground truth | `get_screenshot` |
+
+Use whatever your server actually provides for each role. If a role is missing,
+mark that coverage **unverified** and continue with the tools you have.
 
 ## Workflow — 8 steps (do not skip)
 
@@ -62,7 +76,7 @@ Copy into your reply and tick as you go:
 ```
 - [ ] Step 0  — Parse URL + choose bootstrap or integration mode
 - [ ] Step 1a — get_metadata(root) → enumerate blocks
-- [ ] Step 1b — per-block: metadata + design_context + variable_defs + screenshot
+- [ ] Step 1b — per-block: structure + design context + variables + screenshot
 - [ ] Step 1c — parse design context for unique primitive values
 - [ ] Step 1d — strict per-block JSON, then screen aggregate
 - [ ] Step 1e — responsive/state/style inventory across target frames
@@ -85,6 +99,11 @@ Paste-ready prompts: [PROMPT_PACK.md](./PROMPT_PACK.md).
 3. Confirm stack hints (React/Vue/Svelte, Tailwind v3/v4, CSS modules, etc.) — codegen language should match the consumer.
 4. In bootstrap mode, record the proposed package root, consumer app root,
    token prefix, target frames, and release owner before creating files.
+5. Quick Figma readiness check (ask the designer if unclear): major stacks use
+   Auto Layout; repeated controls are Components with variants for hover /
+   pressed / disabled when those states exist. If the file is mostly freeform
+   absolute positioning, warn that HUG/FILL/gap semantics will be incomplete and
+   more values will land as page chrome — see [SETUP.md](./SETUP.md#prepare-the-figma-file).
 
 ### Step 1 — Chunked MCP discovery (STRICT)
 
@@ -98,28 +117,21 @@ get_metadata(fileKey, rootNodeId)
 
 Enumerate **top-level blocks** (nav/sidebar, hero/header, cards, tables, footers, glow layers, …). If metadata is huge, descend one level — do not paste the full tree as evidence.
 
-#### 1b. Four-tool pass per block
+#### 1b. Four-role pass per block
 
-For each block (parallel when possible):
+For each block (parallel when possible), call your MCP's tools for the four
+roles above — structure, design context, variables, screenshot.
 
-| Tool | Purpose |
-| --- | --- |
-| `get_metadata` | Child structure |
-| `get_design_context` | Layout + tokens + reference codegen |
-| `get_variable_defs` | Bound Figma variables (authoritative) |
-| `get_screenshot` | Visual ground truth for Step 6 |
+**Truncation guard:** if design-context output is ~600+ lines or marked truncated → abort and split into children. Never implement from sparse root metadata alone.
 
-**Truncation guard:** if `get_design_context` is ~600+ lines or marked truncated → abort and split into children. Never implement from sparse root metadata alone.
+Omit `fileKey` on Figma desktop MCP variants that use the open file.
 
-Omit `fileKey` on Figma desktop MCP.
-
-> **Token export — fidelity fallback.** `get_design_context` / `get_variable_defs`
-> can silently resolve only the **default mode** and the Variables REST path can be
-> plan-restricted (Enterprise-only on some MCP servers). To keep `TOKEN_JSON.md`
-> authoritative, resolve **aliased** values and capture **every variable mode**
-> (see `MEASUREMENTS_CHECKLIST.md` §12). If the standard read path is plan-limited,
-> pull the aliased / multi-mode values via the Plugin API (`use_figma`-style scripts)
-> before writing tokens.
+> **Token export — fidelity limits.** Design-context / variable tools can resolve
+> only the **default mode**, and some servers restrict Variables access by plan.
+> Capture every available mode (see `MEASUREMENTS_CHECKLIST.md` §12). If modes or
+> aliased values cannot be read, mark them **unverified** in the inventory and
+> continue — do not invent mode values or promise a Plugin API path this skill
+> does not ship.
 
 #### 1c. Parse — do not eyeball
 
