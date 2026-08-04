@@ -41,11 +41,34 @@ function run(script, args = []) {
 // 0. version sync: SKILL.md metadata.version ↔ latest CHANGELOG ## heading -----
 const skillMd = fs.readFileSync(path.join(repoRoot, "SKILL.md"), "utf8");
 const changelogMd = fs.readFileSync(path.join(repoRoot, "CHANGELOG.md"), "utf8");
+const semverRe = /^\d+\.\d+\.\d+$/;
 const skillVersion = skillMd.match(/^\s*version:\s*"([^"]+)"/m)?.[1] ?? null;
-const changelogVersion = changelogMd.match(/^##\s+(\d+\.\d+\.\d+)\b/m)?.[1] ?? null;
+check(
+  "version parse: SKILL.md metadata.version",
+  Boolean(skillVersion) && semverRe.test(skillVersion),
+  skillVersion
+    ? `got "${skillVersion}"`
+    : 'missing `version: "x.y.z"` under metadata',
+);
+
+// First version-like CHANGELOG heading; reject ## 1.1 / ## v1.0.1 / undated junk.
+const changelogHeading = changelogMd.match(/^##\s+(.+)$/m)?.[1]?.trim() ?? null;
+const changelogVersionMatch = changelogHeading?.match(/^(\d+\.\d+\.\d+)\b/);
+const changelogVersion = changelogVersionMatch?.[1] ?? null;
+check(
+  "version parse: CHANGELOG latest ## heading",
+  Boolean(changelogVersion),
+  changelogVersion
+    ? `got "${changelogVersion}"`
+    : changelogHeading
+      ? `heading "${changelogHeading}" must start with x.y.z (e.g. ## 1.0.1 — 2026-08-04)`
+      : "no ## heading found",
+);
 check(
   "version sync: SKILL.md ↔ CHANGELOG",
-  Boolean(skillVersion) && skillVersion === changelogVersion,
+  Boolean(skillVersion) &&
+    Boolean(changelogVersion) &&
+    skillVersion === changelogVersion,
   `skill=${skillVersion ?? "?"} changelog=${changelogVersion ?? "?"}`,
 );
 
