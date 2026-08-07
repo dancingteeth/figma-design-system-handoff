@@ -1,6 +1,12 @@
 # Changelog
 
-Versions match `metadata.version` in [`SKILL.md`](./SKILL.md).
+Versions match `metadata.version` in [`SKILL.md`](./skills/figma-design-system-handoff/SKILL.md) and `plugin.json`.
+
+## 1.0.2 — 2026-08-08
+
+- **Agent Plugins packaging:** add root [`plugin.json`](./plugin.json) and move the skill payload to [`skills/figma-design-system-handoff/`](./skills/figma-design-system-handoff/) (docs + `scripts/`). `npx skills add` discovery unchanged. Figma MCP remains client-configured (no `mcp.json` — auth is not portable in Agent Plugins 1.0.0).
+- `scripts/self-test.mjs` also asserts `SKILL.md` ↔ `plugin.json` version sync.
+- No workflow rubric changes.
 
 ## 1.0.1 — 2026-08-04
 
@@ -11,10 +17,10 @@ Feedback + designer readiness polish:
   design-context / variables / screenshot roles.
 - Drop the undefined Plugin API (`use_figma`) promise — mark unread variable
   modes as **unverified** instead.
-- Promote the licensed-font hard rule in [`ASSETS.md`](./ASSETS.md).
+- Promote the licensed-font hard rule in [`ASSETS.md`](./skills/figma-design-system-handoff/ASSETS.md).
 - Add designer guidance for **Auto Layout + Components** in
-  [`SETUP.md`](./SETUP.md#prepare-the-figma-file), with agent checks in
-  prerequisites / Step 0 / [`BOOTSTRAP.md`](./BOOTSTRAP.md).
+  [`SETUP.md`](./skills/figma-design-system-handoff/SETUP.md#prepare-the-figma-file), with agent checks in
+  prerequisites / Step 0 / [`BOOTSTRAP.md`](./skills/figma-design-system-handoff/BOOTSTRAP.md).
 - `scripts/self-test.mjs` asserts SKILL↔CHANGELOG version sync and that the
   font-drop rule remains present in ASSETS.md.
 - Note that live Figma MCP usually needs a paid Dev Mode seat; offline helpers
@@ -49,8 +55,8 @@ handoff skill.
 
 ### Supporting docs
 
-- [`SETUP.md`](./SETUP.md) — designer-facing onboarding.
-- [`ADAPTER.md`](./ADAPTER.md) — bootstrap/integration project contract.
-- [`BOOTSTRAP.md`](./BOOTSTRAP.md) — raw Figma → first design package.
-- [`STATES.md`](./STATES.md) — state and primitive vocabulary.
-- [`TOKEN_JSON.md`](./TOKEN_JSON.md) — machine-readable token contract.
+- [`SETUP.md`](./skills/figma-design-system-handoff/SETUP.md) — designer-facing onboarding.
+- [`ADAPTER.md`](./skills/figma-design-system-handoff/ADAPTER.md) — bootstrap/integration project contract.
+- [`BOOTSTRAP.md`](./skills/figma-design-system-handoff/BOOTSTRAP.md) — raw Figma → first design package.
+- [`STATES.md`](./skills/figma-design-system-handoff/STATES.md) — state and primitive vocabulary.
+- [`TOKEN_JSON.md`](./skills/figma-design-system-handoff/TOKEN_JSON.md) — machine-readable token contract.

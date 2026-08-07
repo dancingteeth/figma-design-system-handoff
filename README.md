@@ -5,14 +5,16 @@ maintainable design system and working UI — tokens, primitives, page chrome �
 instead of pasting raw codegen.
 
 Brand-agnostic. Point it at a customer Figma file with or without an existing
-design package by filling [ADAPTER.md](./ADAPTER.md).
+design package by filling [ADAPTER.md](./skills/figma-design-system-handoff/ADAPTER.md).
+
+Also packaged as an [Agent Plugin](https://agent-plugins.org/) (`plugin.json` + `skills/`). Figma MCP stays client-configured (auth is not portable in Agent Plugins 1.0.0).
 
 ## Who it's for
 
 - **Designers** handed a finished Figma file by a PM, frontend engineer, or
   founder and asked to "turn this into a working design system." The skill
   drives the extraction; you approve naming and packaging decisions. No dev
-  background assumed — start at [SETUP.md](./SETUP.md).
+  background assumed — start at [SETUP.md](./skills/figma-design-system-handoff/SETUP.md).
 - **Engineers** wiring a Figma frame into tokens + components with pixel
   parity, or refreshing the package after the Figma changed.
 
@@ -35,21 +37,21 @@ Figma MCP / codegen agents fail in predictable ways:
 | **5** | Localize assets; no MCP localhost URLs |
 | **6–7** | Verify / build / visual diff / release readiness |
 
-The full rubric lives in [`SKILL.md`](./SKILL.md). Bootstrap mode is in
-[`BOOTSTRAP.md`](./BOOTSTRAP.md). Paste-ready prompts:
-[`PROMPT_PACK.md`](./PROMPT_PACK.md). Measurements:
-[`MEASUREMENTS_CHECKLIST.md`](./MEASUREMENTS_CHECKLIST.md). Assets:
-[`ASSETS.md`](./ASSETS.md). State + primitive vocabulary:
-[`STATES.md`](./STATES.md). Token JSON contract:
-[`TOKEN_JSON.md`](./TOKEN_JSON.md). Optional Node helpers:
-[`scripts/extract-primitives.mjs`](./scripts/extract-primitives.mjs) (parse a
-dump), [`scripts/compare-figma-to-tokens.mjs`](./scripts/compare-figma-to-tokens.mjs)
+The full rubric lives in [`SKILL.md`](./skills/figma-design-system-handoff/SKILL.md). Bootstrap mode is in
+[`BOOTSTRAP.md`](./skills/figma-design-system-handoff/BOOTSTRAP.md). Paste-ready prompts:
+[`PROMPT_PACK.md`](./skills/figma-design-system-handoff/PROMPT_PACK.md). Measurements:
+[`MEASUREMENTS_CHECKLIST.md`](./skills/figma-design-system-handoff/MEASUREMENTS_CHECKLIST.md). Assets:
+[`ASSETS.md`](./skills/figma-design-system-handoff/ASSETS.md). State + primitive vocabulary:
+[`STATES.md`](./skills/figma-design-system-handoff/STATES.md). Token JSON contract:
+[`TOKEN_JSON.md`](./skills/figma-design-system-handoff/TOKEN_JSON.md). Optional Node helpers:
+[`scripts/extract-primitives.mjs`](./skills/figma-design-system-handoff/scripts/extract-primitives.mjs) (parse a
+dump), [`scripts/compare-figma-to-tokens.mjs`](./skills/figma-design-system-handoff/scripts/compare-figma-to-tokens.mjs)
 (diff a dump against the token JSON),
-[`scripts/verify-package-exports.mjs`](./scripts/verify-package-exports.mjs) and
-[`scripts/consumer-smoke.mjs`](./scripts/consumer-smoke.mjs) (Step 6 release
-gates), plus [`scripts/self-test.mjs`](./scripts/self-test.mjs) to prove the
+[`scripts/verify-package-exports.mjs`](./skills/figma-design-system-handoff/scripts/verify-package-exports.mjs) and
+[`scripts/consumer-smoke.mjs`](./skills/figma-design-system-handoff/scripts/consumer-smoke.mjs) (Step 6 release
+gates), plus [`scripts/self-test.mjs`](./skills/figma-design-system-handoff/scripts/self-test.mjs) to prove the
 helpers work offline. Proven reference:
-[`REFERENCE_IMPLEMENTATION.md`](./REFERENCE_IMPLEMENTATION.md).
+[`REFERENCE_IMPLEMENTATION.md`](./skills/figma-design-system-handoff/REFERENCE_IMPLEMENTATION.md).
 
 ## Install
 
@@ -64,35 +66,20 @@ npx skills check
 npx skills update figma-design-system-handoff
 ```
 
-New to agents or Figma MCP? [SETUP.md](./SETUP.md) is the designer-facing
+New to agents or Figma MCP? [SETUP.md](./skills/figma-design-system-handoff/SETUP.md) is the designer-facing
 one-time setup (agent, Figma MCP, Node) — no dev background assumed.
 
 **Plan limit:** live Figma MCP usually needs a paid Dev Mode seat. Without it,
 inventory against a live file will not work — offline helpers
-([`scripts/self-test.mjs`](./scripts/self-test.mjs) and saved design-context
+([`scripts/self-test.mjs`](./skills/figma-design-system-handoff/scripts/self-test.mjs) and saved design-context
 dumps) still run.
 
-Or copy these files into your agent skills directory (keep relative links intact):
-
-- `SKILL.md`
-- `SETUP.md`
-- `ADAPTER.md`
-- `BOOTSTRAP.md`
-- `PROMPT_PACK.md`
-- `MEASUREMENTS_CHECKLIST.md`
-- `ASSETS.md`
-- `STATES.md`
-- `TOKEN_JSON.md`
-- `REFERENCE_IMPLEMENTATION.md`
-- `SOURCES.md`
-- `scripts/extract-primitives.mjs`
-- `scripts/compare-figma-to-tokens.mjs`
-- `scripts/verify-package-exports.mjs`
-- `scripts/consumer-smoke.mjs`
-- `scripts/self-test.mjs`
-- `scripts/fixtures/sample-figma-dump.txt`
+Or copy the `skills/figma-design-system-handoff/` directory into your agent
+skills directory (keep the folder intact so relative links and `scripts/` work).
 
 Examples: `~/.cursor/skills/figma-design-system-handoff/`, `.agents/skills/figma-design-system-handoff/`, `.claude/skills/figma-design-system-handoff/`.
+
+Clients that load [Agent Plugins](https://agent-plugins.org/) can use the repo root (`plugin.json` + `skills/`) as the plugin package.
 
 Changelog: [`CHANGELOG.md`](./CHANGELOG.md).
 
@@ -101,7 +88,7 @@ Changelog: [`CHANGELOG.md`](./CHANGELOG.md).
 This repo is the **methodology**. For a specific brand:
 
 1. Install this skill.
-2. Add a thin project skill or `AGENTS.md` section that fills [ADAPTER.md](./ADAPTER.md) (file key defaults, CSS/TS paths, verify commands).
+2. Add a thin project skill or `AGENTS.md` section that fills [ADAPTER.md](./skills/figma-design-system-handoff/ADAPTER.md) (file key defaults, CSS/TS paths, verify commands).
 3. Optionally keep a brand npm package skill that *links* here for steps 1–2 and supplies paths for 3–7. If the brand ships the skill from its npm package, consumers can symlink it into their agent skills directory so it stays in sync on `pnpm up`/`npm update`:
    ```bash
    mkdir -p .cursor/skills && ln -s ../../node_modules/<brand-pkg>/skills/<skill> .cursor/skills/<skill>
@@ -121,11 +108,11 @@ design system exists.
 Choose it only when canonical token and component paths already exist.
 
 Neither mode treats generated v0 code as the architecture. See
-[`BOOTSTRAP.md`](./BOOTSTRAP.md) for the complete creation sequence.
+[`BOOTSTRAP.md`](./skills/figma-design-system-handoff/BOOTSTRAP.md) for the complete creation sequence.
 
 For best extraction quality, prefer Figma frames with **Auto Layout** on major
 sections and **Components/variants** for repeated controls — designer checklist
-in [`SETUP.md`](./SETUP.md#prepare-the-figma-file). Freeform artboards still
+in [`SETUP.md`](./skills/figma-design-system-handoff/SETUP.md#prepare-the-figma-file). Freeform artboards still
 work; layout semantics will be weaker.
 
 For responsive work, supply all required Figma target frames or variable modes

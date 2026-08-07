@@ -95,7 +95,7 @@ npx skills add dancingteeth/figma-design-system-handoff
 ```
 
 Or copy the files into your project's agent skills directory (paths in
-[README.md](./README.md#install)). Then prove the helpers work — no Figma
+[README.md](../../README.md#install)). Then prove the helpers work — no Figma
 session needed:
 
 ```bash

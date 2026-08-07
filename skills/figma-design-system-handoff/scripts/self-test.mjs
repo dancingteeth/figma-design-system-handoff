@@ -24,7 +24,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const scriptsDir = path.dirname(fileURLToPath(import.meta.url));
-const repoRoot = path.resolve(scriptsDir, "..");
+const skillRoot = path.resolve(scriptsDir, "..");
+const repoRoot = path.resolve(skillRoot, "..", "..");
 const fixture = path.join(scriptsDir, "fixtures", "sample-figma-dump.txt");
 
 let failures = 0;
@@ -39,7 +40,7 @@ function run(script, args = []) {
 }
 
 // 0. version sync: SKILL.md metadata.version ↔ latest CHANGELOG ## heading -----
-const skillMd = fs.readFileSync(path.join(repoRoot, "SKILL.md"), "utf8");
+const skillMd = fs.readFileSync(path.join(skillRoot, "SKILL.md"), "utf8");
 const changelogMd = fs.readFileSync(path.join(repoRoot, "CHANGELOG.md"), "utf8");
 const semverRe = /^\d+\.\d+\.\d+$/;
 const skillVersion = skillMd.match(/^\s*version:\s*"([^"]+)"/m)?.[1] ?? null;
@@ -72,8 +73,16 @@ check(
   `skill=${skillVersion ?? "?"} changelog=${changelogVersion ?? "?"}`,
 );
 
+const pluginJsonPath = path.join(repoRoot, "plugin.json");
+const pluginJson = JSON.parse(fs.readFileSync(pluginJsonPath, "utf8"));
+check(
+  "version sync: SKILL.md ↔ plugin.json",
+  Boolean(skillVersion) && pluginJson.version === skillVersion,
+  `skill=${skillVersion ?? "?"} plugin=${pluginJson.version ?? "?"}`,
+);
+
 // 1. ASSETS.md font-drop hard rule still present --------------------------------
-const assetsMd = fs.readFileSync(path.join(repoRoot, "ASSETS.md"), "utf8");
+const assetsMd = fs.readFileSync(path.join(skillRoot, "ASSETS.md"), "utf8");
 check(
   "ASSETS.md: licensed font hard rule",
   /licensed font binaries/i.test(assetsMd) &&

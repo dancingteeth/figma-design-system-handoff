@@ -1,0 +1,20 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "figma-design-system-handoff",
+  "version": "1.0.2",
+  "description": "Figma MCP → design system handoff: chunked discovery, tokens, primitives, parity — not raw codegen.",
+  "author": {
+    "name": "dancingteeth",
+    "url": "https://github.com/dancingteeth"
+  },
+  "homepage": "https://github.com/dancingteeth/figma-design-system-handoff",
+  "repository": "https://github.com/dancingteeth/figma-design-system-handoff",
+  "license": "MIT",
+  "keywords": [
+    "figma",
+    "design-system",
+    "tokens",
+    "agent-skills",
+    "agent-plugins"
+  ]
+}

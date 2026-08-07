@@ -8,7 +8,7 @@ description: >-
 license: MIT
 metadata:
   author: dancingteeth
-  version: "1.0.1"
+  version: "1.0.2"
 ---
 
 # Figma → Design-System Handoff
